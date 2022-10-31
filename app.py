@@ -118,7 +118,8 @@ if __name__ == '__main__':
 
     data = list(zip(xlist, ylist))
     plt.scatter(xlist, ylist, c='red')
-    plt.show()
+    #plt.show()
+    plt.savefig('foo.png', bbox_inches='tight')
 
     df = pd.DataFrame(data)
 
