@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "random-geolocation"
+version = "0.1.0"
+description = ""
+authors = ["Mehmet Uzel <98mehmetuzel@gmail.com>"]
+readme = "README.md"
+packages = [{include = "random_geolocation"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^1.5.1"
+matplotlib = "^3.6.1"
+shapely = "^1.8.5.post1"
+fiona = "^1.8.22"
+geopandas = "^0.12.1"
+fastapi = "^0.85.1"
+uvicorn = {extras = ["standard"], version = "^0.19.0"}
+requests = "^2.28.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
