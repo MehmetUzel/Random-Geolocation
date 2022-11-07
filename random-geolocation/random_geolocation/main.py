@@ -1,15 +1,13 @@
 from datetime import datetime
 from fastapi import FastAPI
 from pydantic import BaseModel
-import os
-import requests
 from dotenv import load_dotenv
 from shapely.geometry import Polygon
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import random
-import pandas as pd  
-from locationproc import is_inside_polygon
+import pandas as pd 
+import locationproc
 from fastapi.responses import StreamingResponse
 import io
 
@@ -20,18 +18,36 @@ class Search(BaseModel):
     area_name: str
     num_of_loc: int
     is_normal_dist: bool
-    wb_or_xmean: int
-    eb_or_xstd: int
-    nb_or_ymean: int
-    sb_or_ystd: int
+    wb_or_xmean: float
+    eb_or_xstd: float
+    nb_or_ymean: float
+    sb_or_ystd: float
 
 
-@app.post("/v1/search")
-def recieve_signal(signal: Search):
+@app.get("/v1/search" , response_description='csv')
+async def recieve_signal():
+    data = {
+        "area_name": "Istanbul",
+        "num_of_loc": 100,
+        "is_normal_dist": False,
+        "wb_or_xmean": 28.95,
+        "eb_or_xstd": 0.23,
+        "nb_or_ymean": 41.00,
+        "sb_or_ystd": 0.07
+    }
+    signal = Search(**data)
 
     df = process_signal(signal)
 
-    response = StreamingResponse(io.StringIO(df.to_csv(index=False, header=False)), media_type="text/csv")
+    stream = io.StringIO()
+    
+    df.to_csv(stream, index = False, header = False)
+
+    response = StreamingResponse(iter([stream.getvalue()]),
+                        media_type="text/csv"
+    )
+
+    response.headers["Content-Disposition"] = "attachment; filename=export.csv"
 
     return response
 
@@ -42,23 +58,31 @@ def process_signal(signal: Search):
 
     NUMBER_OF_POINTS = signal.num_of_loc
     count = 0
+    pcount = 0
     xlist = []
     ylist = []
-    p = gpd.GeoSeries(Polygon(polygonlist))
-    p.plot()
+    #p = gpd.GeoSeries(Polygon(polygonlist))
+    #p.plot()
 
-    while NUMBER_OF_POINTS > count:
+    while NUMBER_OF_POINTS > pcount:
+        print(count)
+        print(pcount)
         x, y = random_loc(signal)
         p = (x, y)
-        if is_inside_polygon(points = polygonlist, p = p):
-            count += 1
+        if locationproc.is_inside_polygon(points = polygonlist, p = p):
+            pcount += 1
             xlist.append(x)
             ylist.append(y)
+        else:
+            count -= 1
+        
+        if count < -1000:
+            break
 
     data = list(zip(xlist, ylist))
-    plt.scatter(xlist, ylist, c='red')
+    #plt.scatter(xlist, ylist, c='red')
     #plt.show()
-    plt.savefig('foo.png', bbox_inches='tight')
+    #plt.savefig('foo.png', bbox_inches='tight')
 
     df = pd.DataFrame(data)
 
@@ -69,5 +93,14 @@ def process_signal(signal: Search):
 def random_loc(signal: Search):
     if signal.is_normal_dist:
         return random.uniform(signal.wb_or_xmean, signal.eb_or_xstd) , random.uniform(signal.nb_or_ymean, signal.sb_or_ystd)
-    else:
-        return random.gauss(signal.wb_or_xmean, signal.eb_or_xstd) , random.gauss(signal.nb_or_ymean, signal.sb_or_ystd)
+
+    return random.gauss(signal.wb_or_xmean, signal.eb_or_xstd) , random.gauss(signal.nb_or_ymean, signal.sb_or_ystd)
+
+
+"""
+curl -X 'POST' \
+'http://127.0.0.1:8000/v1/search' \
+-H 'accept: application/json' \
+-H 'Content-Type: application/json' \
+-d '{"area_name": "string","num_of_loc": 100,"is_normal_dist": false,"wb_or_xmean": 41.00,"eb_or_xstd": 0.07,"nb_or_ymean": 28.95,"sb_or_ystd": 0.23}'
+"""
