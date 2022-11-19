@@ -19,4 +19,4 @@ RUN pip3 install poetry &&\
     poetry config virtualenvs.create false &&\ 
     poetry install --no-dev
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
