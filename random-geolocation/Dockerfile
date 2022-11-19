@@ -1,4 +1,4 @@
-FROM python:3.10.5-slim-buster
+FROM python:3.9.13-slim
 
 
 # Install GDAL dependencies
@@ -17,6 +17,6 @@ WORKDIR /app
 ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
 RUN pip3 install poetry &&\ 
     poetry config virtualenvs.create false &&\ 
-    poetry install 
+    poetry install --no-dev
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
