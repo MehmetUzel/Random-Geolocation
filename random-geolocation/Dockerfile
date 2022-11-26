@@ -27,6 +27,15 @@
 # 
 FROM python:3.9.13-slim as requirements-stage
 
+# Install GDAL dependencies
+RUN apt-get -y update && \
+    apt-get install -y libgdal-dev g++ --no-install-recommends && \
+    apt-get clean -y
+
+# Update C env vars so compiler can find gdal
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
+
 # 
 WORKDIR /tmp
 
