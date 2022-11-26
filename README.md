@@ -17,3 +17,5 @@ docker cp <containerId>:/file/path/within/container /host/path/target
 docker cp e80fe0f239d1:/app_demo/foo.png ~/ 
 
 curl -o point.csv 'http://127.0.0.1:8000/v1/search' -H 'accept: application/json'
+
+intelligent_sutherland
