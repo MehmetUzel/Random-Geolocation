@@ -10,8 +10,8 @@ RUN apt-get -y update && \
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 
-COPY /random_geolocation /app
-COPY pyproject.toml /app 
+COPY ./random_geolocation /app
+COPY ./pyproject.toml /app 
 WORKDIR /app
 
 ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
