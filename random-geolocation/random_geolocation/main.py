@@ -23,6 +23,9 @@ class Search(BaseModel):
     nb_or_ymean: float
     sb_or_ystd: float
 
+@app.get("/v1/test", status_code=201)
+async def testing():
+    return {"mehmet":"success"}
 
 @app.get("/v1/search" , response_description='csv')
 async def recieve_signal():
