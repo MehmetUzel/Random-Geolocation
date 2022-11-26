@@ -10,8 +10,9 @@ RUN apt-get -y update && \
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 
-COPY ./pyproject.toml /app 
 WORKDIR /app
+
+COPY ./pyproject.toml /app 
 
 ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
 RUN pip3 install poetry &&\ 
