@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 import random
 import pandas as pd 
-from locationproc import is_inside_polygon
+from app.locationproc import is_inside_polygon
 from fastapi.responses import StreamingResponse
 import io
 
