@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 import random
 import pandas as pd 
-import locationproc
+from locationproc import is_inside_polygon
 from fastapi.responses import StreamingResponse
 import io
 
@@ -72,7 +72,7 @@ def process_signal(signal: Search):
         print(pcount)
         x, y = random_loc(signal)
         p = (x, y)
-        if locationproc.is_inside_polygon(points = polygonlist, p = p):
+        if is_inside_polygon(points = polygonlist, p = p):
             pcount += 1
             xlist.append(x)
             ylist.append(y)
