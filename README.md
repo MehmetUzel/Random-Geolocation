@@ -19,3 +19,6 @@ docker cp e80fe0f239d1:/app_demo/foo.png ~/
 curl -o point.csv 'http://127.0.0.1:8000/v1/search' -H 'accept: application/json'
 
 intelligent_sutherland
+
+
+"docker" Failed to get options via gdal-config: [Errno 2] No such file or directory: gdal-config #13 3.830   A GDAL API version must be specified.
