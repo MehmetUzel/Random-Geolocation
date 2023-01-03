@@ -76,7 +76,7 @@ async def recieve_signal(signal: Search):
 
 
 def process_signal(signal: Search):
-    points_list, found_name = get_polygon_list("Beylikdüzü")
+    points_list, found_name = get_polygon_list(signal.area_name)
 
     polygonps = convert_to_tuple(points_list)
 
